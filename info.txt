@@ -1,0 +1,1 @@
+[{"title":"ryzen 5 2600 ","description":"12 hilos ","price":110,"thumbnail":"url","code":0,"stock":100,"id":1}]
