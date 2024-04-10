@@ -1,32 +1,16 @@
 import express from "express";
-import ProductManager from "./components/ProductManager.js";
+import ProductRouter from "./src/router/product.routes.js";
+import cartsRouter from "./src/router/carts.routes.js";
 
 const app = express();
+const PORT = 8080;
+
+app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-const productos = new ProductManager();
-//Llamamos a los productos
-const readProducts = productos.readProducts();
+app.use("/api/products", ProductRouter);
+app.use("/api/carts", cartsRouter);
 
-app.get("/products", async (req, res) => {
-  let limit = parseInt(req.query.limit);
-  if (!limit) return res.send(await readProducts);
-  let allProducts = await readProducts;
-  let productLimit = allProducts.slice(0, limit);
-  console.log(limit);
-  res.send(productLimit);
+app.listen(PORT, () => {
+  console.log(`Express por Local Host ${PORT}`);
 });
-
-app.get("/products/:id", async (req, res) => {
-  let id = parseInt(req.params.id);
-  let allProducts = await readProducts;
-  let productById = allProducts.find((product) => product.id === id);
-  res.send(productById);
-});
-
-const PORT = 8080;
-const server = app.listen(PORT, () => {
-  console.log(`Express por Local Host ${server.address().port}`);
-});
-
-server.on("error", (error) => console.log(`Error del servidor ${error}`));
