@@ -1,5 +1,6 @@
 import { promises as fs } from "fs";
-import { nanoid } from "nanoid";
+// descarto nanoid porque me devolvia un string y no se porque no me dejaba parsear
+// import { nanoid } from "nanoid";
 
 class ProductManager {
   constructor() {
@@ -17,7 +18,7 @@ class ProductManager {
 
   addProducts = async (product) => {
     let productsOld = await this.readProducts();
-    product.id = nanoid();
+    product.id = Math.floor(Math.random() * 100);
     let productAll = [...productsOld, product];
     await this.writeProducts(productAll);
     return "Producto Agregado";
@@ -50,6 +51,7 @@ class ProductManager {
 
   deleteProducts = async (id) => {
     let products = await this.readProducts();
+
     let existProducts = products.some((prod) => prod.id === id);
     if (existProducts) {
       let filterProducts = products.filter((prod) => prod.id != id);

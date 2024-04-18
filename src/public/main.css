@@ -1,0 +1,46 @@
+/* Estilo para la sección de lista de productos */
+main {
+  background-color: red;
+}
+body {
+  background-color: black;
+}
+#listProducts {
+  margin-top: 20px;
+}
+
+/* Estilo para el título de la lista de productos */
+#listProducts h2 {
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+/* Estilo para la lista de productos */
+#product-list {
+  list-style-type: none;
+  padding: 0;
+}
+
+/* Estilo para cada elemento de producto */
+#product-list li {
+  margin-bottom: 10px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #f9f9f9;
+}
+
+/* Estilo para el botón de eliminar */
+#product-list li button {
+  padding: 5px 10px;
+  background-color: #dc3545;
+  color: #fff;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+/* Estilo para el botón de eliminar al pasar el mouse sobre él */
+#product-list li button:hover {
+  background-color: #c82333;
+}

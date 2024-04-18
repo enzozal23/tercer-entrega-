@@ -1,0 +1,16 @@
+<main>
+  <h1>Todos los productos</h1>
+  <div>
+    {{#each products}}
+    <div class="product-card">
+      <h2> nombre:{{this.title}}</h2>
+      <p>id : {{this.id}}</p>
+      <p> descripcion:{{this.description}}</p>
+      <p>Precio: {{this.price}}</p>
+    </div>
+    {{/each}}
+    <button>
+      <li><a href="/realtimeproducts">agregar o eliminar productos </a></li>
+    </button>
+    </di>
+</main>

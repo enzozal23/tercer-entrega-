@@ -1,0 +1,87 @@
+<section class="containerProducts">
+  <section id="product-form">
+    <h2>
+      Agregar producto
+    </h2>
+    <form id="FormAgregar">
+      <label for="title">Nombre del producto:</label>
+      <input type="text" id="title" name="title" required />
+
+      <label for="description">Descripción:</label>
+      <input type="text" id="description" name="description" required />
+
+      <label for="code">Código del producto:</label>
+      <input type="text" id="code" name="code" required />
+
+      <label for="price">Precio:</label>
+      <input type="number" id="price" name="price" required />
+
+      <label for="stock">Stock:</label>
+      <input type="number" id="stock" name="stock" required />
+
+      <input type="submit" value="Agregar producto" />
+    </form>
+  </section>
+
+  <section id="listProducts">
+    <h2>Lista de productos</h2>
+    <ul id="product-list">
+      {{#each products}}
+      <li id="product-{{this.id}}">
+        {{this.title}}
+        -
+        ${{this.price}}
+        <button onclick="deleteProduct({{this.id}})">Eliminar</button>
+      </li>
+      {{/each}}
+    </ul>
+  </section>
+
+</section>
+
+<button>
+  <li><a href="/"> ver todos los productos</a></li>
+</button>
+
+<script src="/socket.io/socket.io.js"></script>
+
+<script>
+  const socket = io();
+  document.querySelector('#formAgregar').addEventListener('submit', (event) => {
+    event.preventDefault(); const title = document.querySelector('#title').value;
+    const description = document.querySelector('#description').value; const code =
+      document.querySelector('#code').value; const price =
+        document.querySelector('#price').value; const stock =
+          document.querySelector('#stock').value;
+
+
+
+    socket.emit('createProduct', {
+      title,
+      description, code, price, stock
+    });
+  })
+
+
+  socket.on('productCreated', (newProduct) => {
+    const productList = document.getElementById('listProducts');
+    const productItem = document.createElement('li');
+    productItem.id = `product-${newProduct.id}`;
+    productItem.innerHTML = `
+      ${newProduct.title} - ${newProduct.price}
+      <button onclick="deleteProduct(${newProduct.id})">Eliminar</button>
+    `;
+    productList.appendChild(productItem);
+  });
+
+  socket.on('productDeleted', (productId) => {
+    const productItem = document.getElementById(`product-${productId}`);
+    productItem.remove();
+  });
+
+  function deleteProduct(productId) {
+    socket.emit('deleteProduct', productId);
+  }
+
+
+</script>
