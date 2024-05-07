@@ -31,7 +31,7 @@
         {{this.title}}
         -
         ${{this.price}}
-        <button onclick="deleteProduct('{{this.id}}')">Eliminar</button>
+        <button onclick="deleteProduct(`{{this.id}}`)">Eliminar</button>
       </li>
       {{/each}}
     </ul>
@@ -47,13 +47,14 @@
 
 <script>
   const socket = io();
-  document.querySelector('#formAgregar').addEventListener('submit', (event) => {
-    event.preventDefault(); 
+  document.querySelector('#FormAgregar').addEventListener('submit', (event) => {
+    event.preventDefault();
     const title = document.querySelector('#title').value;
-    const description = document.querySelector('#description').value; 
-    const code =document.querySelector('#code').value;
-     const price =document.querySelector('#price').value; 
-     const stock =document.querySelector('#stock').value;
+    const description = document.querySelector('#description').value;
+    const code = document.querySelector('#code').value;
+    const price = document.querySelector('#price').value;
+    const stock = document.querySelector('#stock').value;
+
 
 
 
@@ -63,9 +64,9 @@
     });
   })
 
- function deleteProduct(productId) {
+  function deleteProduct(productId) {
     socket.emit('deleteProduct', productId);
-  } 
+  }
 
   socket.on('productCreated', (newProduct) => {
     const productList = document.getElementById('listProducts');
@@ -80,7 +81,10 @@
 
   socket.on('productDeleted', (productId) => {
     const productItem = document.getElementById(`product-${productId}`);
-    productItem.remove();
+    if (productItem) {
+      productItem.remove();
+    } console.log(`product id ${productId} no existe`)
+
   });
 
   function deleteProduct(productId) {

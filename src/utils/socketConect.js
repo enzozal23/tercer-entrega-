@@ -9,9 +9,10 @@ export function configSocket(server) {
     io.on('connection', socket => {
         console.log('usuario conectado');
 
-        // Eventos de productos
+        //escuchando los emits del producto
         socket.on('createProduct', async product => {
             const newProduct = await productManager.addProduct(product);
+
             io.emit('productCreated', newProduct);
         });
 
@@ -33,7 +34,7 @@ export function configSocket(server) {
             io.emit('products', products);
         });
 
-        // Eventos de chat
+        // Escuchando los mensajes del chat
         socket.on('newMessage', async message => {
             const newMessage = await messageManager.addMessage(message);
             io.emit('messageSend', newMessage);
@@ -44,7 +45,7 @@ export function configSocket(server) {
             io.emit('messages', messages);
         });
 
-        // Eventos generales
+
         socket.on('disconnect', () => {
             console.log('usuario desconectado');
         });

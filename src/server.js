@@ -34,7 +34,10 @@ app.engine(
   "hbs",
   handlebars.engine({
     extname: ".hbs",
-
+    runtimeOptions: {
+      allowProtoPropertiesByDefault: true,
+      allowProtoMethodsByDefault: true, // esto era lo que no me dejaba mostrar los productos 
+    },
   })
 );
 // set direccion de vistas

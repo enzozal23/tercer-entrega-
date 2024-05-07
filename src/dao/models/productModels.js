@@ -8,7 +8,7 @@ const productSchema = new Schema({
     price: Number,
     code: String,
     stock: Number,
-    thumbnail: String,
+
 
 });
 const Product = model('products', productSchema);
