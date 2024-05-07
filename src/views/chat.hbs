@@ -1,0 +1,33 @@
+<div id="messages">
+    {{#each messages}}
+    <p><strong>{{this.user}}:</strong> {{this.message}}</p>
+    {{/each}}
+</div>
+<form id="messageForm">
+    <input type="text" id="user" placeholder="Nombre de usuario" required />
+    <input type="text" id="message" placeholder="Mensaje" required />
+    <button type="submit">Enviar</button>
+</form>
+
+
+<script src="/socket.io/socket.io.js"></script>
+<script>
+    const socket = io();
+
+    document.getElementById('messageForm').addEventListener('submit', function (e) {
+        e.preventDefault();
+        const user = document.getElementById('user').value;
+        const message = document.getElementById('message').value;
+        socket.emit('newMessage', { user, message });
+        document.getElementById('message').value = '';
+    });
+
+    socket.on('messageSend', function (message) {
+        const messagesDiv = document.getElementById('messages');
+        const messageElement = document.createElement('p');
+        messageElement.innerHTML = `<strong>${message.user}:</strong> ${message.message} `;
+        messagesDiv.appendChild(messageElement);
+        messagesDiv.scrollTop = messagesDiv.scrollHeight;
+    });
+
+</script>

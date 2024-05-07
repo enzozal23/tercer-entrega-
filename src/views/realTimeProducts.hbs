@@ -31,7 +31,7 @@
         {{this.title}}
         -
         ${{this.price}}
-        <button onclick="deleteProduct({{this.id}})">Eliminar</button>
+        <button onclick="deleteProduct('{{this.id}}')">Eliminar</button>
       </li>
       {{/each}}
     </ul>
@@ -48,11 +48,12 @@
 <script>
   const socket = io();
   document.querySelector('#formAgregar').addEventListener('submit', (event) => {
-    event.preventDefault(); const title = document.querySelector('#title').value;
-    const description = document.querySelector('#description').value; const code =
-      document.querySelector('#code').value; const price =
-        document.querySelector('#price').value; const stock =
-          document.querySelector('#stock').value;
+    event.preventDefault(); 
+    const title = document.querySelector('#title').value;
+    const description = document.querySelector('#description').value; 
+    const code =document.querySelector('#code').value;
+     const price =document.querySelector('#price').value; 
+     const stock =document.querySelector('#stock').value;
 
 
 
@@ -62,6 +63,9 @@
     });
   })
 
+ function deleteProduct(productId) {
+    socket.emit('deleteProduct', productId);
+  } 
 
   socket.on('productCreated', (newProduct) => {
     const productList = document.getElementById('listProducts');
@@ -69,7 +73,7 @@
     productItem.id = `product-${newProduct.id}`;
     productItem.innerHTML = `
       ${newProduct.title} - ${newProduct.price}
-      <button onclick="deleteProduct(${newProduct.id})">Eliminar</button>
+      <button onclick="deleteProduct('${newProduct.id}')">Eliminar</button>
     `;
     productList.appendChild(productItem);
   });

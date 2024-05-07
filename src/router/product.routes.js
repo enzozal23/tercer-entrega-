@@ -1,32 +1,33 @@
-import { Router } from "express";
-import ProductManager from "../components/ProductManager.js";
 
-const ProductRouter = Router();
+import express from "express";
+import ProductManager from "../dao/productManagerDB.js";
+
+const router = express.Router();
 const product = new ProductManager();
 
-ProductRouter.get("/", async (req, res) => {
+router.get("/", async (req, res) => {
   res.send(await product.getProducts());
 });
 
-ProductRouter.get("/:id", async (req, res) => {
+router.get("/:id", async (req, res) => {
   let id = req.params.id;
-  res.send(await product.getProductsById(id));
+  res.send(await product.getProductById(id));
 });
 
-ProductRouter.post("/", async (req, res) => {
+router.post("/", async (req, res) => {
   let newProduct = req.body;
-  res.send(await product.addProducts(newProduct));
+  res.send(await product.addProduct(newProduct));
 });
 
-ProductRouter.put("/:id", async (req, res) => {
+router.put("/:id", async (req, res) => {
   let id = req.params.id;
   let updateProducts = req.body;
-  res.send(await product.updateProducts(id, updateProducts));
+  res.send(await product.updateProduct(id, updateProducts));
 });
 
-ProductRouter.delete("/:id", async (req, res) => {
+router.delete("/:id", async (req, res) => {
   let id = req.params.id;
-  res.send(await product.deleteProducts(id));
+  res.send(await product.deleteProduct(id));
 });
 
-export default ProductRouter;
+export default router;

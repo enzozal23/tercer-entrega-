@@ -1,12 +1,12 @@
 import { promises as fs } from "fs";
 import { nanoid } from "nanoid";
-import ProductManager from "./ProductManager.js";
+import ProductManager from "./productManagerFs.js";
 
 const productAll = new ProductManager();
 
 class CartManager {
   constructor() {
-    this.path = "./src/models/carts.json";
+    this.path = "./src/json/carts.json";
   }
 
   readCarts = async () => {
