@@ -1,6 +1,6 @@
 import express from "express";
-import router from "./router/product.routes.js";
-import cartsRouter from "./router/carts.routes.js";
+import router from "./router/api/products.routes.js";
+import cartsRouter from "./router/api/carts.routes.js";
 import { __dirname } from "./utils.js";
 import handlebars from "express-handlebars";
 import ViewsRouter from "./router/views.routes.js";
@@ -56,7 +56,7 @@ app.use(
   },
   router
 );
-
+app.use('/api/carts', cartsRouter)
 
 app.use('/chat', (req, res, next) => {
   req.io = io;

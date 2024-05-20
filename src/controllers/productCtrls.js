@@ -11,7 +11,7 @@ export const getProducts = async (req, res) => {
 
 export const getProductById = async (req, res) => {
   const pid = parseInt(req.params.pid);
-  const product = await productManager.getProductById(pid);
+  const product = await productManager.getProductsById(pid);
   if (!product) {
     return res.status(404).json({
       status: "error",
@@ -28,7 +28,7 @@ export const addProduct = async (req, res) => {
     !product.description ||
     !product.price ||
     !product.code ||
-    !product.stock
+    !product.stock || !category
   ) {
     return res.status(400).json({
       status: "error",
@@ -47,7 +47,7 @@ export const addProduct = async (req, res) => {
 export const updateProduct = async (req, res) => {
   const pid = parseInt(req.params.pid);
   const product = req.body;
-  const existingProduct = await productManager.getProductById(pid);
+  const existingProduct = await productManager.getProductsById(pid);
   if (!existingProduct) {
     return res.status(404).json({
       status: "error",
@@ -60,7 +60,7 @@ export const updateProduct = async (req, res) => {
 
 export const deleteProduct = async (req, res) => {
   const pid = parseInt(req.params.pid);
-  const existingProduct = await productManager.getProductById(pid);
+  const existingProduct = await productManager.getProductsById(pid);
   if (!existingProduct) {
     return res.status(404).json({
       status: "error",
