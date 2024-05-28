@@ -16,3 +16,19 @@ POST http://localhost:8080/api/carts/66476a02f6d97c1f3099d378/products/663bc28e8
 
 ### buscar carrito
 GET http://localhost:8080/api/carts/66476a02f6d97c1f3099d378
+
+
+### SESSIONS
+POST http://localhost:8080/api/sessions/login
+Content-Type: application/json
+
+{
+    "email": "XXX",
+    "password": "adminCoder"
+}
+
+### 
+GET http://localhost:8080/pruebas/logout
+
+###
+GET http://localhost:8080/pruebas/current

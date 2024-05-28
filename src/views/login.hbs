@@ -1,0 +1,15 @@
+<main class="container">
+    <h1>Acceder</h1>
+    <form action="/api/sessions/login" method="POST" class="form-group w-50">
+        <div class="mb-3">
+            <label class="form-label">Ingresa tu email</label>
+            <input type="email" class="form-control" aria-describedby="emailHelp" name="email">
+            <div id="emailHelp" class="form-text">Nunca compartiremos tu correo electrónico con nadie más</div>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Contraseña</label>
+            <input type="text" name="password" class="form-control">
+        </div>
+        <button type="submit" class="btn btn-primary">Ingresar</button>
+    </form>
+</main>

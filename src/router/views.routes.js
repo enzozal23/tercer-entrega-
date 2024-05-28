@@ -9,4 +9,10 @@ ViewsRouter.get("/realTimeProducts", getRealTimeProducts);
 ViewsRouter.get('/products/:id', getProductById)
 ViewsRouter.get('/chat', getChat)
 ViewsRouter.get('/cart:cid', getCartById)
+ViewsRouter.get('/login', (req, res) => {
+    res.render('login')
+})
+ViewsRouter.get('/register', (req, res) => {
+    res.render('register')
+})
 export default ViewsRouter;

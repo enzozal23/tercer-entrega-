@@ -1,0 +1,24 @@
+<main class="container">
+    <h1>register</h1>
+    <form action="/api/sessions/register" method="POST" class="form-group w-50 ">
+
+        <div class="mb-3">
+            <label for="exampleInputPassword1" class="form-label">Nombre</label>
+            <input type="text" name="first_name" class="form-control">
+        </div>
+        <div class="mb-3">
+            <label for="exampleInputPassword1" class="form-label">Apellido</label>
+            <input type="text" name="last_name" class="form-control">
+        </div>
+        <div class="mb-3">
+            <label for="exampleInputEmail1" class="form-label">Ingresa tu email</label>
+            <input type="email" class="form-control" aria-describedby="emailHelp" name="email">
+        </div>
+        <div class="mb-3">
+            <label for="exampleInputPassword1" class="form-label">Contraseña</label>
+            <input type="text" name="password" class="form-control">
+        </div>
+        <button type="submit" class="btn btn-primary">Ingresar</button>
+
+    </form>
+</main>
