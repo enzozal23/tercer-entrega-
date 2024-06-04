@@ -11,6 +11,13 @@ import { configSocket } from "./utils/socketConect.js";
 import pruebasRouter from './router/pruebas.js'
 import sessionsRouter from "./router/sessions.router.js";
 import MongoStore from 'connect-mongo'
+import passport from 'passport'
+import { initializePassport } from './config/passport.config.js'
+
+
+
+
+
 const app = express();
 const PORT = process.env.PORT || 8080;
 const httpServer = app.listen(PORT, () => {
@@ -20,8 +27,8 @@ const httpServer = app.listen(PORT, () => {
 
 const io = configSocket(httpServer)
 
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.json()); // servidor puede leer json 
+app.use(express.urlencoded({ extended: true })); //para que el servidor reciba a traves de un formulario y convertirlo en un objeto javascript
 app.use(cookieParser('s3cre3t@F1rma'))
 
 app.use(session({
@@ -36,7 +43,9 @@ app.use(session({
 }))
 
 
-
+initializePassport()
+app.use(passport.initialize())
+app.use(passport.session())
 
 
 // conect mongodb atlas
