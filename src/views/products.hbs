@@ -1,0 +1,42 @@
+<main>
+    <div class="d-flex justify-content-evenly">
+        <h1> Te damos la bienvenida {{user}}</h1>
+        {{#if userExist}}
+        <a href="/api/sessions/logout" class="btn btn-outline-primary w-25">Cerrar sesión</a>
+        {{/if}}
+    </div>
+    <div class="container h-100">
+        {{#each products}}
+        <div class="card card-body rounded-0 animate__animated animate__fadeInUp mb-2 ">
+            <div class="d-flex justify-content-between">
+                <h1 class="card-title h3">{{this.title}}</h1>
+                <div>
+                    <button class="btn btn-secondary miBotonAgregar" id="{{this._id}}" data-id="{{this._id}}">
+                        Agregar al carrito
+                    </button>
+                    {{!-- <button class="btn btn-secondary update" onclick="updateProduct('{{this._id}}')"
+                        data-id="{{this._id}}">update</button> --}}
+                </div>
+            </div>
+            <div>
+                <p>{{this.description}}</p>
+            </div>
+        </div>
+        {{/each}}
+
+        <div class="pagination d-flex justify-content-between">
+            {{#if hasPrevPage}}
+            <a href="/products?numPage={{prevPage}}" class="btn btn-primary">Anterior</a>
+            {{/if}}
+
+            <span class="page-label">{{page}}</span>
+
+            {{#if hasNextPage}}
+            <a href="/products?numPage={{nextPage}}" class="btn btn-primary">Siguiente</a>
+            {{/if}}
+        </div>
+    </div>
+    <div></div>
+</main>
+
+<script src="/socket.io/socket.io.js"></script>

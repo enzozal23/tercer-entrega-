@@ -29,7 +29,7 @@ const io = configSocket(httpServer)
 
 app.use(express.json()); // servidor puede leer json 
 app.use(express.urlencoded({ extended: true })); //para que el servidor reciba a traves de un formulario y convertirlo en un objeto javascript
-app.use(cookieParser('s3cre3t@F1rma'))
+app.use(cookieParser())
 
 app.use(session({
   store: MongoStore.create({

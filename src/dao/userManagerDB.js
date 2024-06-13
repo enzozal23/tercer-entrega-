@@ -16,7 +16,7 @@ export class UsersManagerMongo {
 
   async getUserBy(filter) {
     console.log(filter);
-    return this.userModel.findOne(filter);
+    return await this.userModel.findOne(filter);
   }
 
   async getUserByEmail(email) {

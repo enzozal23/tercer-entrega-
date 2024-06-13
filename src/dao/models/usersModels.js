@@ -1,4 +1,4 @@
-import { Schema, model }  from "mongoose"
+import { Schema, model } from "mongoose"
 import mongoosePaginate from 'mongoose-paginate-v2'
 
 const userCollection = 'users'
@@ -11,10 +11,15 @@ const userSchema = new Schema({
     last_name: String,
     email: {
         type: String,
-        required: true, 
+        required: true,
         unique: true
     },
+    age: Number,
     password: String,
+    cartId: {
+        type: Schema.Types.ObjectId,
+        ref: 'carts'
+    },
     role: {
         type: String,
         default: 'user'

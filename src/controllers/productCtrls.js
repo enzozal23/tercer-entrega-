@@ -4,13 +4,13 @@ import ProductManager from "../dao/productManagerDB.js";
 const productManager = new ProductManager();
 
 export const getProducts = async (req, res) => {
-  const limit = parseInt(req.query.limit);
-  const products = await productManager.getProducts(limit);
+  const limit = parseInt(req.query.limit,10)|| 10;
+  const products = await productManager.getProducts({limit});
   res.render("products", { products });
 };
 
 export const getProductById = async (req, res) => {
-  const pid = parseInt(req.params.pid);
+  const pid = parseInt(req.params.pid,10);
   const product = await productManager.getProductsById(pid);
   if (!product) {
     return res.status(404).json({
@@ -45,7 +45,7 @@ export const addProduct = async (req, res) => {
 };
 
 export const updateProduct = async (req, res) => {
-  const pid = parseInt(req.params.pid);
+  const pid = parseInt(req.params.pid,10);
   const product = req.body;
   const existingProduct = await productManager.getProductsById(pid);
   if (!existingProduct) {
@@ -59,7 +59,7 @@ export const updateProduct = async (req, res) => {
 };
 
 export const deleteProduct = async (req, res) => {
-  const pid = parseInt(req.params.pid);
+  const pid = parseInt(req.params.pid,10);
   const existingProduct = await productManager.getProductsById(pid);
   if (!existingProduct) {
     return res.status(404).json({

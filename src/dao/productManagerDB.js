@@ -10,24 +10,24 @@ class ProductManager {
     getProducts = async ({ limit = 10, pageNum = 1, sortByPrice, category, status, title }) => {
         let query = {}
         if (category) {
-            query = { category: category };
+            query.category = category;
         }
         if (status) {
-            query = { status: status };
+            query.status = status;
         }
         if (title) {
-            query = { title: title };
+            query.title = title;
         }
 
         let toSortedByPrice = {}
         if (sortByPrice) {
-            toSortedByPrice = { price: parseInt(sortByPrice) }
+            toSortedByPrice = { price: parseInt(sortByPrice, 10) }
         }
 
         return await this.productsModel.paginate(query, { limit: limit, page: pageNum, lean: true, sort: toSortedByPrice });
     }
 
-    addProduct = async (title, description, code, price, status, stock, category) => {
+    addProduct = async ({ title, description, code, price, status, stock, category }) => {
         const newProduct = {
             title: title,
             description: description,
