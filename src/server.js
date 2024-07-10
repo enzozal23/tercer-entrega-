@@ -1,6 +1,6 @@
 import express from "express";
-import router from "./router/api/products.routes.js";
-import cartsRouter from "./router/api/carts.routes.js";
+import routerApp from './router/index.js'
+// import cartsRouter from "./router/api/carts.routes.js";
 import { connectDB, objectConfig } from './config/index.js'
 import { __dirname } from "./utils.js";
 import handlebars from "express-handlebars";
@@ -9,13 +9,13 @@ import cookieParser from 'cookie-parser'
 import session from 'express-session'
 import mongoose from "mongoose";
 import { configSocket } from "./utils/socketConect.js";
-import pruebasRouter from './router/pruebas.js'
-import sessionsRouter from "./router/sessions.router.js";
+// import pruebasRouter from './router/pruebas.js'
+// import sessionsRouter from "./router/sessions.router.js";
 import MongoStore from 'connect-mongo'
 import passport from 'passport'
 import { initializePassport } from './config/passport.config.js'
 import dotenv from 'dotenv';
-
+import cors from 'cors'
 dotenv.config();
 
 
@@ -35,7 +35,7 @@ app.use(cookieParser())
 app.use(session({
   store: MongoStore.create({
     mongoUrl: process.env.MONGO_URL,
-    mongoOptions: { useNewUrlParser: true, useUnifiedTopology: true },
+    // mongoOptions: { useNewUrlParser: true, useUnifiedTopology: true },
     ttl: 60 * 60 * 1000 * 24
   }),
   secret: 'Firmasecreta',
@@ -65,28 +65,17 @@ app.engine(
 // set direccion de vistas
 app.set("views", __dirname + "/views");
 app.set("view engine", "hbs");
-
+app.use(cors())
+app.use(routerApp)
 // endpoints
 app.use("/", ViewsRouter);
 // app.get("/realTimeProducts", ViewsRouter);
 
-app.use(
-  "/api/products",
-  (req, res, next) => {
-    req.io = io;
-    next();
-  },
-  router
-);
-
-app.use('/api/carts', cartsRouter)
-app.use('/api/sessions', sessionsRouter)
-app.use('/chat', (req, res, next) => {
-  req.io = io;
-  next();
-},
-  ViewsRouter)
-
-app.use("/api/carts", cartsRouter);
-app.use('/pruebas', pruebasRouter)
-app.use('/api/sessions', sessionsRouter)
+// app.use(
+//   "/api/products",
+//   (req, res, next) => {
+//     req.io = io;
+//     next();
+//   },
+//   router
+// );

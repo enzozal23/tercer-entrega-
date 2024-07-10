@@ -2,9 +2,8 @@ import { createHash, isValidPassword } from '../utils/bcrypt.js'
 import passport from 'passport'
 import local from 'passport-local'
 import GithubStratetegy from 'passport-github2'
-import { UsersManagerMongo } from '../dao/userManagerDB.js'
+import { UsersManagerMongo } from '../daos/Dao/userManagerDB.js'
 import { Strategy, ExtractJwt } from 'passport-jwt'
-import { PRIVATE_KEY } from '../utils/jwt.js'
 const userService = new UsersManagerMongo()
 const LocalStrategy = local.Strategy
 
@@ -18,7 +17,7 @@ const cookieExtractor = req => {
 export const initializePassport = () => {
     passport.use('jwt', new Strategy({
         jwtFromRequest: ExtractJwt.fromExtractors([cookieExtractor]),
-        secretOrKey: PRIVATE_KEY
+        secretOrKey: process.env.PRIVATE_KEY
     }, async (jwt_payload, done) => {
         try {
             return done(null, jwt_payload)

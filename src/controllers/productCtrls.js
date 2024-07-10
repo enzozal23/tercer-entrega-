@@ -1,92 +1,65 @@
 
-import ProductManager from "../dao/productManagerDB.js";
+import { productService } from "../service/index.js"
 
-const productManager = new ProductManager();
+class ProductController {
+    constructor() {
+        this.service = productService
+    }
 
-export const getProducts = async (req, res) => {
-  const limit = parseInt(req.query.limit,10)|| 10;
-  const products = await productManager.getProducts({limit});
-  res.render("products", { products });
-};
+    getProducts = async (req, res) => {
+        try {
+            const products = await this.service.getProducts()
+            res.send({ status: 'success', payload: products })
+        } catch (error) {
+            console.log(error)
+        }
 
-export const getProductById = async (req, res) => {
-  const pid = parseInt(req.params.pid,10);
-  const product = await productManager.getProductsById(pid);
-  if (!product) {
-    return res.status(404).json({
-      status: "error",
-      error: "Producto no encontrado",
-    });
-  }
-  res.json({ product });
-};
+    }
 
-export const addProduct = async (req, res) => {
-  const product = req.body;
-  if (
-    !product.title ||
-    !product.description ||
-    !product.price ||
-    !product.code ||
-    !product.stock || !category
-  ) {
-    return res.status(400).json({
-      status: "error",
-      error: "faltan datos del producto",
-    });
-  }
-  const newProduct = await productManager.addProduct(product);
-  req.io.emit("productCreated", newProduct);
-  res.status(201).json({
-    status: "success",
-    message: "Producto creado",
-    product: newProduct,
-  });
-};
+    getProduct = async (req, res) => {
+        try {
+            const { pid } = req.params
+            const result = await this.service.getProductById(pid)
+            res.send({ status: 'success', payload: result })
+        } catch (error) {
+            console.log(error)
+        }
+    }
 
-export const updateProduct = async (req, res) => {
-  const pid = parseInt(req.params.pid,10);
-  const product = req.body;
-  const existingProduct = await productManager.getProductsById(pid);
-  if (!existingProduct) {
-    return res.status(404).json({
-      status: "error",
-      error: ` el ID:${pid} no existe`,
-    });
-  }
-  const updatedProduct = await productManager.updateProduct(pid, product);
-  res.json({ updatedProduct });
-};
+    createProduct = async (req, res) => {
+        try {
+            const { title, description, price, thumbnail, code, stock, category } = req.body
+            if (!title || !description || !price || !code || !stock || !category) return res.send({ status: 'error', error: 'faltan datos' })
+            const result = await this.service.createProduct(req.body)
 
-export const deleteProduct = async (req, res) => {
-  const pid = parseInt(req.params.pid,10);
-  const existingProduct = await productManager.getProductsById(pid);
-  if (!existingProduct) {
-    return res.status(404).json({
-      status: "error",
-      error: `No se puede eliminar un producto con el ID:${pid} que no existe`,
-    });
-  }
-  await productManager.deleteProduct(pid);
-  req.io.emit("productDeleted", pid);
-  res.status(200).json({ message: "Producto eliminado correctamente" });
-};
+            res.send({ status: 'success', payload: result })
+        } catch (error) {
+            console.log(error)
+        }
+    }
 
-export const deleteProducts = async (req, res) => {
-  await productManager.deleteProduct();
-  res.json({
-    status: "success",
-    message: "Todos los productos han sido eliminados",
-  });
-};
+    updateProduct = async (req, res) => {
+        try {
+            const { pid } = req.params
+            const { title, description, price, thumbnail, code, stock, category } = req.body
+            if (!title || !description || !price || !code || !stock || !category) return res.send({ status: 'error', error: 'faltan datos' })
 
-export const getHome = async (req, res) => {
-  const products = await productManager.getProducts();
-  res.render("home", { products });
-};
+            const result = await this.service.updateProduct(pid, { title, description, price, thumbnail, code, stock, category })
+            res.send({ status: 'success', payload: result })
+        } catch (error) {
+            console.log(error)
+        }
+    }
 
-export const getRealTimeProducts = async (req, res) => {
-  const products = await productManager.getProducts();
-  res.render("realTimeProducts", { products });
-};
+    deleteProduct = async (req, res) => {
+        try {
+            const { pid } = req.params
+            const result = await this.service.deleteProduct(pid)
+            res.send({ status: 'success', payload: result })
+        } catch (error) {
+            console.log(error)
+        }
+    }
+}
 
+export default ProductController

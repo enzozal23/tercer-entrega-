@@ -1,6 +1,6 @@
 import { Server } from "socket.io";
-import MessageManager from "../dao/messageManager.js";
-import ProductManager from "../dao/productManagerDB.js";
+import MessageManager from "../daos/Dao/messageManager.js";
+import ProductManager from "../daos/Dao/productManagerDB.js";
 const messageManager = new MessageManager()
 const productManager = new ProductManager()
 

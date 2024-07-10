@@ -1,93 +1,92 @@
-import CartManager from '../dao/cartManajerDB.js';
+import { cartService } from "../service/index.js"
 
-const cartManager = new CartManager();
-
-export const createCart = async (req, res) => {
-    try {
-        const cart = await cartManager.createCart();
-        res.status(201).json({
-            status: 'success',
-            message: 'Carrito creado correctamente',
-            payload: cart,
-        });
-    } catch (error) {
-        res.status(500).json({
-            status: 'error',
-            error: 'Error al crear el carrito',
-        });
+class CartController {
+    constructor(){
+        this.cartService = cartService
     }
-};
 
-export const getCartById = async (req, res) => {
-    const cid = parseInt(req.params.cid);
-    const cart = await cartManager.getCartById(cid);
-    if (!cart) {
-        return res.status(404).json({
-            status: 'error',
-            error: 'Carrito no encontrado',
-        });
-    }
-    res.json({ cart });
-};
-
-export const addProductToCart = async (req, res) => {
-    const cid = parseInt(req.params.cid);
-    const pid = parseInt(req.params.pid);
-
-    try {
-        const cart = await cartManager.addToCart(cid, pid);
-        if (!cart) {
-            return res.status(404).json({
-                status: 'error',
-                error: 'Producto no encontrado',
-            });
+    getCart = async(req, res) => {
+        try {
+            const {cid} = req.params
+            const result = await this.cartService.getCartById(cid)
+            res.send({status:'success', payload: result})            
+        } catch (error) {
+            console.log(error)
         }
-        res.json({ cart });
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({
-            status: 'error',
-            error: 'Error al agregar producto al carrito',
-        });
-    }
-};
-
-export const removeProductFromCart = async (req, res) => {
-    const cid = parseInt(req.params.cid);
-    const pid = parseInt(req.params.pid);
-
-    if (isNaN(cid) || isNaN(pid)) {
-        return res.status(400).json({
-            status: 'error',
-            error: 'ID del carrito y del producto deben ser números',
-        });
     }
 
-    try {
-        const cart = await cartManager.removeProductFromCart(cid, pid);
-        if (!cart) {
-            return res.status(404).json({
-                status: 'error',
-                error: 'No se pudo eliminar el producto del carrito',
-            });
+    createCart = async(req, res) => {
+        try {
+            const result = await this.cartService.addCart()
+            res.send({status: 'seccess', payload: result})            
+        } catch (error) {
+            console.log(error)
         }
-        res.json({ cart });
-    } catch (error) {
-        res.status(500).json({
-            status: 'error',
-            error: 'Error al eliminar producto del carrito',
-        });
     }
-};
 
-export const deleteCart = async (req, res) => {
-    const cid = parseInt(req.params.cid);
-    const cart = await cartManager.deleteCart(cid);
-    if (!cart) {
-        return res.status(404).json({
-            status: 'error',
-            error: 'No se pudo eliminar el carrito',
-        });
+    addProductCart = async(req, res) => {
+        try {
+            const { cid, pid } = req.params;
+            const { quantity } = req.body;
+            const result = await this.cartService.addProduct(cid, pid, quantity);
+            res.send({status: 'seccess', payload: result})            
+        } catch (error) {
+            console.log(error)
+        }
     }
-    res.json({ cart });
-};
+
+    updateCart =  async(req,res)=>{
+        try {
+            const { cid } = req.params;
+            const { product, quantity } = req.body;
+            const result = await this.cartService.updateTodoCart(cid, req.body);
+            res.send({status:'success', payload: result})            
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    updateProductCart = async(req,res)=>{
+        try {
+            const { cid, pid } = req.params;
+            const { quantity } = req.body;
+            const result = await this.cartService.updateCart(cid, pid, quantity);
+            res.send({status:'success', payload: result})            
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    deleteProductCart =async (req, res) =>{
+        try {
+            const { cid, pid } = req.params;
+            const result = await this.cartService.deleteproduct(cid, pid);
+            res.send({status:'success', payload: result})        
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    deleteCart =  async (req, res) =>{
+        try {
+            const { cid } = req.params;
+            const result = await this.cartService.deleteTodosLosProduct(cid);
+            res.send({status:'success', payload: result})            
+        } catch (error) {
+            console.log(error)
+        }
+    }
+    buyCart = async(req, res)=>{
+        console.log(req.user)
+        try {
+            const { cid } = req.params;
+            const result = await this.cartService.buyCart(cid);
+            res.send({status:'success', payload: result})
+        } catch (error) {
+            console.log(error)
+        }
+                    
+    }   
+}
+
+export default CartController

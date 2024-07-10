@@ -1,6 +1,6 @@
 
 
-import MessageManager from '../dao/messageManager.js';
+import MessageManager from '../daos/Dao/messageManager.js';
 
 const messageManager = new MessageManager();
 
