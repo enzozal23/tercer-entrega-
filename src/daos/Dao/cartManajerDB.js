@@ -42,8 +42,6 @@ class CartDaoManager {
             }
 
             await cart.save();
-            await cartsModel.updateOne({ _id: cid }, { $set: cart });
-            console.log('Carrito actualizado');
             return cart;
         } catch (error) {
             console.error(error);
@@ -92,8 +90,6 @@ class CartDaoManager {
             });
 
             await cart.save();
-            await cartsModel.updateOne({ _id: cid }, { $set: cart });
-            console.log('Carrito actualizado');
             return cart;
         } catch (error) {
             console.error("Error updating cart:", error);

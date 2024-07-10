@@ -25,7 +25,6 @@ router.get('/', (req, res) => {
     res.render('home', {
 
         role: 'admin',
-        title: 'mercadito || Fede',
         products
     })
 })
