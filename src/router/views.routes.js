@@ -7,7 +7,8 @@ import ProductMongoManager from '../daos/Dao/productManagerDB.js';
 import CartMongoDao from '../daos/Dao/cartManajerDB.js'
 import { authorization } from '../middlewares/authorization.middleware.js';
 import { passportCall } from '../middlewares/passportCall.middleware.js';
-
+import { generarProducts } from '../utils/generarproducts.js';
+import { logger } from '../utils/logger.js';
 
 const productService = new ProductMongoManager
 const cartService = new CartMongoDao
@@ -46,13 +47,27 @@ router.get('/products', async (req, res) => {
     });
 
 })
+router.get('/mockingproducts', async (req, res) => {
+    const { limit, numPage, sort, query } = req.query
+    let products = []
+    for (let i = 0; i < 100; i++) {
+        products.push(generarProducts())
+    }
+    const userNombre = req.session.user && req.session.user.nombre ? req.session.user.nombre : '';
+    const userExist = req.session.user ? true : false;
+    res.render('mockingproducts', {
+        products,
+        user: userNombre,
+        userExist
+    });
+})
 router.get('/chat', passportCall('jwt'), authorization('user'), (req, res) => {
     res.render('chat')
 })
 router.get('/carts/:cid', async (req, res) => {
     const { cid } = req.params
     const { carts } = await cartService.getCartById(cid)
-    console.log(carts)
+    logger.info(carts)
 
     res.render('carts', {
         carts, cid

@@ -1,3 +1,4 @@
+import { logger } from "../../utils/logger.js";
 import { ticketModel } from "../models/ticketsModels.js"
 export class TicketDao {
     constructor(path) {
@@ -7,7 +8,7 @@ export class TicketDao {
         try {
             return await ticketModel.create(ticket)
         } catch (error) {
-            console.log(error)
+            logger.error(error)
             return []
         }
     }

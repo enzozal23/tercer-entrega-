@@ -1,82 +1,83 @@
-import Product from '../models/productModels.js'
+import { logger } from "../../utils/logger.js";
+import productsModel from "../models/productModels.js";
 
 
 
-class ProductManager {
-    constructor() {
-        this.productsModel = Product;
+class ProductMongoManager {
+
+    constructor(path) {
+        this.path = path;
+
     }
-
     getTodosProducts = async () => {
         try {
-            const products = await this.productsModel.find()
+            const products = await productsModel.find()
             return products
         } catch (error) {
-            console.log(error)
+            logger.error(error)
             return []
         }
     }
 
-
-
-    getProduct = async ({ limit = 10, pageNum = 1, sortByPrice, category, status, title } = {}) => {
+    getProduct = async ({ limit = 2, numPage = 1, sort = 1, query = null }) => {
         try {
-            let query = {};
-            if (category) {
-                query.category = category;
-            }
-            if (status) {
-                query.status = status;
-            }
-            if (title) {
-                query.title = title;
-            }
+            const products = await productsModel.paginate({ query }, { limit, page: numPage, lean: true, sort: { price: sort } })
 
-            let toSortedByPrice = {};
-            if (sortByPrice) {
-                toSortedByPrice = { price: parseInt(sortByPrice, 10) };
-            }
-
-
-            const validLimit = Number.isInteger(limit) ? limit : 10;
-            const validPageNum = Number.isInteger(pageNum) ? pageNum : 1;
-
-            return await this.productsModel.paginate({ query }, { limit: validLimit, page: validPageNum, lean: true, sort: toSortedByPrice });
+            return products
         } catch (error) {
-            console.error("Error in getProducts:", error);
-            throw error;
+            logger.error(error)
+            return []
         }
-    };
+    }
 
-    addProduct = async ({ title, description, code, price, status, stock, category }) => {
-        const newProduct = {
-            title: title,
-            description: description,
-            code: code,
-            price: price,
-            status: status,
-            stock: stock,
-            category: category,
+    addProduct = async product => {
 
+        if (!product.title || !product.description || !product.price || !product.code || !product.stock) {
+            throw new Error("Faltan parámetros")
         }
         try {
-            return await this.productsModel.collection.insertOne(newProduct);
-
+            const addProduct = await productsModel.create(product)
+            return product
         } catch (error) {
-            throw error
+            logger.error(error)
+        }
+
+    }
+
+    getProductById = async pid => {
+        try {
+            const productId = await productsModel.findOne({ _id: pid })
+            if (productId) {
+                return productId
+            } else {
+                return ('Not fount')
+            }
+        } catch (error) {
+            logger.error(error)
         }
     }
-    getProductsById = async (productId) => {
-        return await this.productsModel.findOne({ _id: productId }).lean();
-    }
-    updateProduct = async (productId, updatedProduct) => {
-        return await this.productsModel.updateOne({ _id: productId }, { $set: updatedProduct });
-    }
-    deleteProduct = async (productId) => {
-        return await this.productsModel.deleteOne({ _id: productId });
+
+    updateProduct = async (pid, { title, description, price, thumbnail, code, stock, category }) => {
+        try {
+            const result = await productsModel.updateOne({ _id: pid }, { $set: { title, description, price, thumbnail, code, stock, category } })
+            return result
+        } catch (error) {
+            logger.error(error)
+        }
     }
 
+    deleteProduct = async (pid) => {
+        try {
+            const products = await productsModel.findByIdAndDelete(pid)
+            return products;
+        } catch (error) {
+            logger.error(error);
+        }
+    }
 
 }
 
-export default ProductManager;
+
+
+
+export default ProductMongoManager

@@ -16,6 +16,9 @@ import passport from 'passport'
 import { initializePassport } from './config/passport.config.js'
 import dotenv from 'dotenv';
 import cors from 'cors'
+import { handleErrors } from './middlewares/errors/index.js'
+import { addLogger, logger } from './utils/logger.js'
+
 dotenv.config();
 
 
@@ -23,8 +26,9 @@ dotenv.config();
 
 const app = express();
 const { port } = objectConfig
-const httpServer = app.listen(port, () => {
-  console.log(` listener on port http://localhost:${port}`);
+const httpServer = app.listen(port, error => {
+  if (error) logger.info(error)
+  logger.info(` listener on port http://localhost:${port}`);
 });
 const io = configSocket(httpServer)
 
@@ -66,16 +70,9 @@ app.engine(
 app.set("views", __dirname + "/views");
 app.set("view engine", "hbs");
 app.use(cors())
+app.use(addLogger)
 app.use(routerApp)
+
 // endpoints
 app.use("/", ViewsRouter);
-// app.get("/realTimeProducts", ViewsRouter);
-
-// app.use(
-//   "/api/products",
-//   (req, res, next) => {
-//     req.io = io;
-//     next();
-//   },
-//   router
-// );
+app.use(handleErrors())
