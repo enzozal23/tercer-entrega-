@@ -7,7 +7,7 @@ import ProductMongoManager from '../daos/Dao/productManagerDB.js';
 import CartMongoDao from '../daos/Dao/cartManajerDB.js'
 import { authorization } from '../middlewares/authorization.middleware.js';
 import { passportCall } from '../middlewares/passportCall.middleware.js';
-import { generarProducts } from '../utils/generarproducts.js';
+import { generarProducts } from '../utils/generarProducts.js';
 import { logger } from '../utils/logger.js';
 
 const productService = new ProductMongoManager

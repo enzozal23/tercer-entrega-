@@ -22,6 +22,38 @@ class SessionsController {
         res.redirect('/products')
     }
 
+
+    emailSessions = async (req, res) => {
+        const { email } = req.body
+        if (!email) return res.send({ status: 'error', error: 'Por favor escribe tu email para recuperar tu cuenta' })
+        const result = await this.userService.getUser({ email })
+        if (!result) return res.status(401).send({ status: 'error', error: 'Usuario incorrecto' })
+
+        const token = this.generateToken({
+            email,
+            first_name: result.first_name,
+            last_name: result.last_name,
+            id: result._id,
+            role: result.role
+        })
+
+        res.cookie('token', token, {
+            maxAge: 3600,
+            httpOnly: true
+        })
+        sendEmail({
+            email: user.email,
+            subject: 'Email de recuperación',
+            html: `
+            <h1>Hola ${result.first_name}</h1>
+            <p>Para recuperar tu cuenta, haz click en el siguiente enlace:</p>
+            <a href="XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX${token}">Recuperar cuenta</a>
+                        `
+        })
+        res.send({ status: 'success', message: 'email enviado' })
+    }
+
+
     registerSessions = async (req, res, next) => {
         try {
             const { email, password, first_name, last_name, age } = req.body

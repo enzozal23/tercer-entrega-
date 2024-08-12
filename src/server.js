@@ -18,10 +18,20 @@ import dotenv from 'dotenv';
 import cors from 'cors'
 import { handleErrors } from './middlewares/errors/index.js'
 import { addLogger, logger } from './utils/logger.js'
-
+import swaggerUiExpress from 'swagger-ui-express'
+import swaggerJsdoc from 'swagger-jsdoc'
 dotenv.config();
 
-
+const swaggerOptions = {
+  definition: {
+    openapi: '3.0.1',
+    info: {
+      title: 'Documentación de mi E-commerce',
+      description: 'Api detallada para documentar los modulos, productos y carrito'
+    }
+  },
+  apis: [`./src/docs/**/*.yaml`]
+}
 
 
 const app = express();
@@ -31,7 +41,7 @@ const httpServer = app.listen(port, error => {
   logger.info(` listener on port http://localhost:${port}`);
 });
 const io = configSocket(httpServer)
-
+const specs = swaggerJsdoc(swaggerOptions)
 app.use(express.json()); // servidor puede leer json 
 app.use(express.urlencoded({ extended: true })); //para que el servidor reciba a traves de un formulario y convertirlo en un objeto javascript
 app.use(cookieParser())
@@ -69,6 +79,7 @@ app.engine(
 // set direccion de vistas
 app.set("views", __dirname + "/views");
 app.set("view engine", "hbs");
+app.use('/apidocs', swaggerUiExpress.serve, swaggerUiExpress.setup(specs))
 app.use(cors())
 app.use(addLogger)
 app.use(routerApp)

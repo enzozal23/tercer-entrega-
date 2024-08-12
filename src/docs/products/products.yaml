@@ -1,0 +1,173 @@
+paths:
+  /api/products/:
+    get:
+      summary: obtiene todos los productos
+      tags:
+        - Products
+      responses:
+        "200":
+          description: Los productos se obtuvieron correctamente
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#components/schemas/Product"
+        "500":
+          description: Error interno del servidor, usualmente generado por una query defectuosa o un fallo con la coneccion de la base de datos
+  /api/products:
+    post:
+      summary: Crea un nuevo producto
+      tags:
+        - Products
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#components/requestBodies/createProduct"
+      responses:
+        "201":
+          description: El producto se creo correctamente
+        "500":
+          description: Error interno del servidor
+        "401":
+          description: Error de autorización debe estar logeado y ser admin
+
+  /api/products/{pid}:
+    get:
+      summary: Obtiene un producto
+      tags:
+        - Products
+      parameters:
+        - name: pid
+          in: path
+          required: true
+          description: id del usuario que se desea solicitar
+          schema:
+            type: string
+            items:
+              $ref: "#components/schemas/Product"
+      responses:
+        "200":
+          description: El producto se obtuvo correctamente
+          content:
+            application/json:
+              schema:
+                $ref: "#components/schemas/Product"
+        "500":
+          description: Error interno del servidor, usualmente generado por una query defectuosa o un fallo con la coneccion de la base de datos
+    put:
+      summary: Actualiza un producto
+      tags:
+        - Products
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#components/requestBodies/createProduct"
+      responses:
+        "201":
+          description: El producto se actualizo correctamente
+        "500":
+          description: Error interno del servidor
+        "401":
+          description: Error de autorización debe estar logeado y ser admin
+      parameters:
+        - name: pid
+          in: path
+          required: true
+          description: id del usuario que se desea actualizar
+          schema:
+            type: string
+            items:
+              $ref: "#components/schemas/Product"
+    delete:
+      summary: Elimina un producto
+      tags:
+        - Products
+      parameters:
+        - name: pid
+          in: path
+          required: true
+          description: id del usuario que se desea eliminar
+          schema:
+            type: string
+            items:
+              $ref: "#components/schemas/Product"
+      responses:
+        "200":
+          description: El producto se elimino correctamente
+          content:
+            application/json:
+              schema:
+                $ref: "#components/schemas/Product"
+        "500":
+          description: Error interno del servidor, usualmente generado por una query defectuosa o un fallo con la coneccion de la base de datos
+        "401":
+          description: Error de autorización debe estar logeado y ser admin
+components:
+  schemas:
+    Product:
+      type: object
+      properties:
+        _id:
+          type: ObjectId
+          description: Id auto generado de mongo
+        title:
+          type: String
+          description: Titulo del producto
+        description:
+          type: String
+          description: Descripción dle producto
+        price:
+          type: Number
+          description: Precio del producto
+        code:
+          type: String
+          description: Codigo creado manualmente
+        stock:
+          type: Number
+          description: Stock del producto
+        category:
+          type: String
+          description: Categoria del producto
+      example:
+        _id: ObjectId('dasdasdwee123132')
+        title: rtx 3060
+        description: gpu con tecnologia ray tracing
+        price: 150000
+        code: nr941
+        stock: 10
+        category: placa de video
+
+  requestBodies:
+    createProduct:
+      type: object
+      properties:
+        title:
+          type: String
+          description: Titulo del producto
+        description:
+          type: String
+          description: Descripción dle producto
+        price:
+          type: Number
+          description: Precio del producto
+        code:
+          type: String
+          description: Codigo creado manualmente
+        stock:
+          type: Number
+          description: Stock del producto
+        category:
+          type: String
+          description: Categoria del producto
+      example:
+        title: ryzen 5600
+        description: procesador ryzen 12 hilos
+        price: 190000
+        code: hx772
+        stock: 15
+        category: cpu
